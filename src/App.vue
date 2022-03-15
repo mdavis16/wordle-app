@@ -1,28 +1,32 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app :style="{ background: '#141414' }">
+    <v-app-bar app color="#141414">
+      <v-icon right> mdi-menu </v-icon>
+      <v-icon right> mdi-help-circle-outline </v-icon>
+      <v-spacer></v-spacer>
+      <h3 style="font-size: 25px">Wordle</h3>
+      <v-spacer></v-spacer>
+      <v-icon right> mdi-poll </v-icon>
+      <v-icon right> mdi-cog </v-icon>
+    </v-app-bar>
+
+    <v-main>
+    <Main></Main>
+    </v-main>
+
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Main from './components/Main.vue'
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    Main
+  },
+  data: () => ({
+  
+  }),
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
 </style>
