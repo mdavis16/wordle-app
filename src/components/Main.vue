@@ -1,7 +1,12 @@
 <template>
-  <v-container class="ma-0 pa-0">
-    <Gameboard :guesses="guesses" />
-    <Keyboard @onKeyPress="onKeyPress" />
+  <v-container>
+    <v-row align="center" class="ma-0 pa-0" justify="center">
+      <Gameboard :guesses="guesses" />
+    </v-row>
+    <v-row align="end" class="ma-0 pa-0" justify="center">
+      <Keyboard @onKeyPress="onKeyPress" />
+    </v-row>
+
     <v-snackbar
       :style="{ 'margin-bottom': calcMargin(i) }"
       v-for="(s, i) in snackbars"
@@ -13,16 +18,14 @@
     </v-snackbar>
 
     <Stats :dialog="statsDialog" />
-
   </v-container>
 </template>
 
 <script>
 import Keyboard from "./Keyboard.vue";
 import Gameboard from "./Gameboard.vue";
-import Stats from "./Dialogs/Stats.vue"
+import Stats from "./Dialogs/Stats.vue";
 import dict from "../assets/wordleDict.txt";
-
 
 export default {
   name: "Main",
@@ -157,10 +160,8 @@ export default {
       this.activeGuess++;
     },
 
-    endGame(win){
-
+    endGame(win) {
       this.statsDialog = true;
-
     },
 
     getGuessWord() {
