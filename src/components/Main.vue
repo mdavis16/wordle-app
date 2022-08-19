@@ -1,23 +1,26 @@
 <template>
-  <v-container>
+  <v-container  class="pt-0 pb-0">
     <v-row align="center" class="ma-0 pa-0" justify="center">
-      <Gameboard :guesses="guesses" />
+      <Gameboard  style="max-width: 500px" :guesses="guesses" />
     </v-row>
-    <v-row align="end" class="ma-0 pa-0" justify="center">
-      <Keyboard @onKeyPress="onKeyPress" />
+    <v-row  align="end" class="ma-0 pa-0" justify="center">
+      <Keyboard style="max-width: 500px" @onKeyPress="onKeyPress" />
     </v-row>
 
+
+  
+
     <v-snackbar
-      :style="{ 'margin-bottom': calcMargin(i) }"
+      :style="{  'top': calcTop(i)}"
       v-for="(s, i) in snackbars"
-      centered
+      app
+      color='white'
       :key="i"
       v-model="showSnackBars"
     >
-      {{ s.text }}
+      <p class = "ma-0 pa-0" style="text-align: center; color: black">{{ s.text }}</p>
     </v-snackbar>
 
-    <Stats :dialog="statsDialog" />
   </v-container>
 </template>
 
@@ -28,6 +31,7 @@ import Stats from "./Dialogs/Stats.vue";
 import dict from "../assets/wordleDict.txt";
 
 export default {
+
   name: "Main",
   components: {
     Keyboard,
@@ -89,10 +93,14 @@ export default {
     snackbars: [],
     showSnackBars: false,
     statsDialog: false,
+    isGameActive: true,
   }),
 
   methods: {
     onKeyPress(key) {
+      if(!this.isGameActive)
+        return;
+
       if (key == "ENTER") {
         this.handleEnter(key);
       } else if (key == "BACK") {
@@ -114,7 +122,7 @@ export default {
     },
 
     handleBack() {
-      if (this.index > 0) {
+      if (this.index > 0 && this.isGameActive) {
         this.index--;
         this.guesses[this.activeGuess].attempts[this.index].key = "";
       }
@@ -130,7 +138,6 @@ export default {
     },
 
     validateWord(guessWord) {
-      debugger;
       return dict.includes(guessWord.toLowerCase());
     },
 
@@ -152,16 +159,34 @@ export default {
         }
       }
 
+      //won game 
       if (count == 5) {
         this.endGame(true);
         return;
+      } 
+      else { 
+        this.activeGuess++;
+        this.index = 0;
+        if(this.activeGuess == 5){
+          this.endGame(false);
+        }        
       }
 
-      this.activeGuess++;
     },
 
     endGame(win) {
-      this.statsDialog = true;
+      this.isGameActive = false; 
+      if(win){
+        this.showSnackBars = true;
+        this.snackbars.push({ text: "Great Job!" });
+      } 
+      else {
+       this.showSnackBars = true;
+       this.snackbars.push({ text: this.word });
+      }
+
+      this.$emit('openDialog' , 'stats');
+      
     },
 
     getGuessWord() {
@@ -172,9 +197,12 @@ export default {
 
     calcMargin(i) {
       if (i != 0) {
-        return i * -62 + "px";
+        return i * -65 + "px";
       }
       return;
+    },
+    calcTop(i){
+      return -90 + i * 5 + "%";
     },
     hide(i) {
       this.snackbars.splice(i, 1);
